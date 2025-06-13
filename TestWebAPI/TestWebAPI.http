@@ -1,0 +1,6 @@
+@TestWebAPI_HostAddress = http://localhost:5196
+
+GET {{TestWebAPI_HostAddress}}/get-secrets/
+Accept: application/json
+
+###
