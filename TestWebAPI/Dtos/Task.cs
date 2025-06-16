@@ -1,1 +1,0 @@
-record Task(string Name, string Description, bool Status);
