@@ -1,7 +1,6 @@
 namespace TestWebAPI.Dtos;
 
-public record TaskDto(
-    int Id,
+public record TaskPostDto(
     string Name,
     string Description,
     bool IsCompleted);

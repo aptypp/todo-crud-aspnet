@@ -10,7 +10,9 @@ public static class AppEndpoints
 {
     public static void MapAppEndpoints(this WebApplication app)
     {
-        var todosApi = app.MapGroup("/api/tasks")
+        const string tasksGroup = "/api/tasks";
+
+        var todosApi = app.MapGroup(tasksGroup)
             .WithTags("Tasks");
 
         todosApi.MapGet("/{id:int}", async (int id, AppDbContext context, IMapper mapper) =>
@@ -31,35 +33,35 @@ public static class AppEndpoints
             })
             .WithOpenApi();
 
-        todosApi.MapPost("/", async (CreateTaskRequest request, AppDbContext context, IMapper mapper) =>
+        todosApi.MapPost("/", async (TaskPostDto taskPostDto, AppDbContext context, IMapper mapper) =>
             {
                 var entity = new TaskEntity
                 {
-                    Name = request.Name,
-                    Description = request.Description,
-                    IsCompleted = request.IsCompleted,
+                    Name = taskPostDto.Name,
+                    Description = taskPostDto.Description,
+                    IsCompleted = taskPostDto.IsCompleted
                 };
 
                 var entry = await context.Tasks.AddAsync(entity);
 
                 await context.SaveChangesAsync();
 
-                var dto = mapper.Map<TaskDto>(entry.Entity);
+                var taskDto = mapper.Map<TaskDto>(entry.Entity);
 
-                return Results.Created($"/api/tasks/{dto.Id}", dto);
+                return Results.Created($"{tasksGroup}/{taskDto.Id}", taskDto);
             })
             .WithOpenApi();
 
         todosApi.MapPatch("/{id:int}",
-                async (int id, TaskPatch patch, AppDbContext context, IMapper mapper) =>
+                async (int id, TaskPatchDto patchDto, AppDbContext context, IMapper mapper) =>
                 {
                     var entity = await context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
 
                     if (entity is null) return Results.NotFound(id);
 
-                    if (patch.Name != null) entity.Name = patch.Name;
-                    if (patch.Description != null) entity.Description = patch.Description;
-                    if (patch.IsCompleted != null) entity.IsCompleted = patch.IsCompleted.Value;
+                    if (patchDto.Name != null) entity.Name = patchDto.Name;
+                    if (patchDto.Description != null) entity.Description = patchDto.Description;
+                    if (patchDto.IsCompleted != null) entity.IsCompleted = patchDto.IsCompleted.Value;
 
                     context.Tasks.Update(entity);
 

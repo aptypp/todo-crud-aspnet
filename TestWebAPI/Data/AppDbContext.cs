@@ -3,7 +3,8 @@ using TestWebAPI.Entities;
 
 namespace TestWebAPI.Data;
 
-public class AppDbContext(DbContextOptions<AppDbContext> options) : DbContext(options)
+public class AppDbContext(
+    DbContextOptions<AppDbContext> options) : DbContext(options)
 {
     public DbSet<TaskEntity> Tasks { get; set; }
 
