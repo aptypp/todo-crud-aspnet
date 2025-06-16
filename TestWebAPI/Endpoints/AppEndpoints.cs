@@ -50,22 +50,23 @@ public static class AppEndpoints
             })
             .WithOpenApi();
 
-        todosApi.MapPut("/{id:int}", async (int id, UpdateTaskRequest request, AppDbContext context, IMapper mapper) =>
-            {
-                var entity = await context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
+        todosApi.MapPatch("/{id:int}",
+                async (int id, TaskPatch patch, AppDbContext context, IMapper mapper) =>
+                {
+                    var entity = await context.Tasks.FirstOrDefaultAsync(x => x.Id == id);
 
-                if (entity is null) return Results.NotFound(id);
+                    if (entity is null) return Results.NotFound(id);
 
-                entity.Name = request.Name;
-                entity.Description = request.Description;
-                entity.IsCompleted = request.IsCompleted;
+                    if (patch.Name != null) entity.Name = patch.Name;
+                    if (patch.Description != null) entity.Description = patch.Description;
+                    if (patch.IsCompleted != null) entity.IsCompleted = patch.IsCompleted.Value;
 
-                context.Tasks.Update(entity);
+                    context.Tasks.Update(entity);
 
-                await context.SaveChangesAsync();
+                    await context.SaveChangesAsync();
 
-                return Results.Ok(mapper.Map<TaskDto>(entity));
-            })
+                    return Results.Ok(mapper.Map<TaskDto>(entity));
+                })
             .WithOpenApi();
 
         todosApi.MapDelete("/{id:int}", async (int id, AppDbContext context, IMapper mapper) =>

@@ -14,8 +14,6 @@ builder.Services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
 var app = builder.Build();
 
-builder.Configuration.GetConnectionString("DefaultConnection");
-
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
@@ -23,7 +21,5 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.MapAppEndpoints();
-
 app.Run();
