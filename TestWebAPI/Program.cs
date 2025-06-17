@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using TestWebAPI.Data;
 using TestWebAPI.Endpoints;
@@ -7,6 +8,8 @@ var builder = WebApplication.CreateBuilder(args);
 
 var dataBaseConnectionString = builder.Configuration.GetConnectionString("DefaultConnection");
 
+builder.Services.AddAuthorization();
+builder.Services.AddIdentityApiEndpoints<IdentityUser>().AddEntityFrameworkStores<AppDbContext>();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddDbContext<AppDbContext>(x => x.UseNpgsql(dataBaseConnectionString));
@@ -21,5 +24,6 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
+app.MapIdentityApi<IdentityUser>();
 app.MapAppEndpoints();
 app.Run();

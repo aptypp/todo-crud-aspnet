@@ -1,3 +1,5 @@
+using Microsoft.AspNetCore.Identity;
+
 namespace TestWebAPI.Entities;
 
 public class TaskEntity
@@ -6,4 +8,6 @@ public class TaskEntity
     public bool IsCompleted { get; set; }
     public string Name { get; set; }
     public string Description { get; set; } = string.Empty;
+    
+    public IdentityUser User { get; set; }
 }

@@ -21,7 +21,8 @@ public static class AppEndpoints
 
                 return entity is null ? Results.NotFound(id) : Results.Ok(mapper.Map<TaskDto>(entity));
             })
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
 
         todosApi.MapGet("/", async (AppDbContext context, IMapper mapper) =>
             {
@@ -31,7 +32,8 @@ public static class AppEndpoints
 
                 return Results.Ok(response);
             })
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
 
         todosApi.MapPost("/", async (TaskPostDto taskPostDto, AppDbContext context, IMapper mapper) =>
             {
@@ -50,7 +52,8 @@ public static class AppEndpoints
 
                 return Results.Created($"{tasksGroup}/{taskDto.Id}", taskDto);
             })
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
 
         todosApi.MapPatch("/{id:int}",
                 async (int id, TaskPatchDto patchDto, AppDbContext context, IMapper mapper) =>
@@ -69,7 +72,8 @@ public static class AppEndpoints
 
                     return Results.Ok(mapper.Map<TaskDto>(entity));
                 })
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
 
         todosApi.MapDelete("/{id:int}", async (int id, AppDbContext context, IMapper mapper) =>
             {
@@ -83,6 +87,7 @@ public static class AppEndpoints
 
                 return Results.Ok(mapper.Map<TaskDto>(entity));
             })
-            .WithOpenApi();
+            .WithOpenApi()
+            .RequireAuthorization();
     }
 }
